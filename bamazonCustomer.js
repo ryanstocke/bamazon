@@ -6,6 +6,8 @@ var inquirer = require("inquirer");
 
 var products = [];
 
+require("console.table");
+
 var connection = mysql.createConnection({
     host: "localhost",
     // port: 3306,
@@ -27,8 +29,8 @@ var connection = mysql.createConnection({
         
         function(err, res) {
             if (err) throw err;
-
-          console.log((res) , " Here are the products!\n");
+            console.table(res);
+        //   console.log( ` Here are the products!\n`, (res));
           products = res;
           var productIds = products.map(function(product){
             return product.id.toString();
@@ -60,7 +62,7 @@ function prompt(productIds){
                 return product;
             }
         })[0];
-        console.log(product);
+        // console.log(product);
         inquirer.prompt([
             {
                 type: "input",
@@ -71,14 +73,26 @@ function prompt(productIds){
                         return true;
                         
                     } else {
-                        return false;
+
+                        return "Insufficient stock!";
                     }
                 }
             }
         ]).then(function(answers){
             var selectedAmount = parseInt(answers.amount);
             console.log(selectedAmount);
+            
+            connection.query(
+                "SELECT * FROM products WHERE id = ?",
+                [product.id],
+                function(err, res) {
+                    if (err) throw err;
+                    console.table(res);
+                    
+                }
+            )
         })
+        
     })
 
 };
