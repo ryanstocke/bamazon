@@ -98,7 +98,7 @@ function prompt(productIds) {
             }
         ]).then(function (answers) {
             var selectedAmount = product.stock_quantity - answers.amount;
-            console.log(selectedAmount);
+            var totalCost = product.price * answers.amount;
             connection.query(
                 "SELECT * FROM products WHERE id = ?", [product.id],function (err, res) {
                     if (err) throw err;
@@ -107,7 +107,8 @@ function prompt(productIds) {
             });
                 }
             )
-                console.log(`The updated stock quantity of the selected item is: `, (answers));
+                console.log(`-----------------------------------------------------------------------\n`,'Your total cost is $' + totalCost + `.\n`, `-----------------------------------------------------------------------\n`);
+                console.log(`The updated stock quantity of the selected item is: `, (selectedAmount));
                 console.log(`-----------------------------------------------------------------------\n`, `Thank you for shopping with Bamazon!\n`, `----------------------------------------------------------------------`)
                 keepShopping();
         })
@@ -115,23 +116,3 @@ function prompt(productIds) {
     })
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// No code below
